@@ -1,0 +1,173 @@
+﻿@model SistemaVenda.Models.VendaViewModel;
+@{
+    var disabled = (Model.Codigo == null) ? "disabled" : string.Empty;
+    ViewData["Title"] = "Venda";
+}
+<h2>Vendas</h2>
+<hr />
+
+<form asp-controller="Venda" asp-action="Cadastro" method="post">
+    <input type="hidden" asp-for="Codigo" value="@Model.Codigo" />
+    <div class="form-group">
+        <div class="row" style="text-align: center;">
+
+            <div class="col-6">
+                <label>Data</label>
+                <input type="date" asp-for="Data" value="@Model.Data" class="form-control" />
+                <span asp-validation-for="Data" class="text-danger"></span>
+            </div>
+            <div class="col-6">
+                <label>Cliente</label>
+                <select asp-for="CodigoCliente" asp-items="@Model.ListaClientes" class="form-control"></select>
+                <span asp-validation-for="CodigoCliente" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="row" style="text-align: center;">
+            <div class="col-4">
+                <label>Produtos</label>
+                <select id="cboProduto" onchange="BuscarPrecoProduto(); CalcularSubTotal()" asp-items="@Model.ListaProdutos" class="form-control"></select>
+            </div>
+
+            <div class="col-2">
+                <label>Preço</label>
+                <input id="txtPrecoUnitario" type="number" class="form-control" disabled />
+            </div>
+            <div class="col-2">
+                <label>Quantidade</label>
+                <input id="txtQtde" type="number" class="form-control" onchange="CalcularSubTotal()" />
+            </div>
+
+            <div class="col-2">
+                <label>Sub Total</label>
+                <input id="txtSubTotal" type="number" class="form-control" disabled />
+            </div>
+
+            <div class="col-2">
+                <button type="button" class="btn btn-info form-control" onclick="AddProduto()" style="margin-top:30px;">Adicionar</button>
+            </div>
+
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-12">
+                <table class="table table-bordered" style="margin-top:25px;">
+                    <thead>
+                        <tr style="background-color: #f6f6f6;">
+                            <th>Produto</th>
+                            <th>Preço</th>
+                            <th>Qtde</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody id="gridProdutos">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Total</label>
+            <div class="col-md-3">
+                <input id="txtTotal" asp-for="Total" type="text" value="@Model.Total" class="form-control" />
+                <span asp-validation-for="Total" class="text-danger"></span>
+            </div>
+        </div>
+
+        <textarea asp-for="JsonProdutos" id="txtJsonProdutos" class="col" style="display:none;"></textarea>
+
+        <br />
+        <div class="col">
+            <button type="button" class="btn btn-info" onclick="Novo()">Novo</button>
+            <button type="submit" class="btn btn-success">Gravar</button>
+            <button type="button" class="btn btn-warning" onclick="Listagem()">Listagem</button>
+            <button type="button" class="btn btn-danger" onclick="Excluir(@Model.Codigo)" @disabled>Excluir</button>
+        </div>
+    </div>
+</form>
+
+<script>
+
+
+    function Novo() {
+        Request("Cadastro")
+    }
+    function Listagem() {
+        Request('')
+    }
+    function Excluir(codigo) {
+        Request("Excluir\\" + codigo)
+    }
+    function Request(request) {
+        window.location = window.origin + "\\Venda\\" + request
+    }
+
+    //Busca o valor do produto na database de acordo com seu código.
+    function BuscarPrecoProduto() {
+        //Pega o código do produto.
+        var CodigoProduto = document.getElementById("cboProduto");
+        //Cria uma url para dialogar com o endpoint definido na Controller.
+        var url = `/LerValorProduto/${CodigoProduto.value}`;
+        //Cria uma Requisição Http
+        var req = new XMLHttpRequest();
+        req.onreadystatechange = function () {
+            if (req.readyState == XMLHttpRequest.DONE) {
+                document.getElementById("txtPrecoUnitario").value = req.responseText;
+            }
+        };
+        //Inicia a requisição com o método GET, a url definida e False para assincronia.
+        req.open('GET', url, false);
+        req.send(null);
+    }
+
+    function CalcularSubTotal() {
+        document.getElementById("txtSubTotal").value =
+            DuasCasasDecimais(document.getElementById("txtPrecoUnitario").value * document.getElementById("txtQtde").value);
+    }
+    var itens = new Object();
+    //Determina que o que haverá em itens será do tipo Produtos
+    itens.Produtos = new Array();
+    var gridProdutos = document.getElementById("gridProdutos");
+
+    //Função que Adiciona um produto a uma lista de compra
+    function AddProduto() {
+        //A var CodigoProduto vai receber o Obj do Produto selecionado na ComboBox
+        var CodigoProduto = document.getElementById("cboProduto");
+        //Os outros campos recebem os valores definidos no formulário principal de cadastro de venda.
+        var Qtde = document.getElementById("txtQtde").value;
+        var ValorUnitario = document.getElementById("txtPrecoUnitario").value;
+        var SubTotal = document.getElementById("txtSubTotal").value;
+
+        //Popula a var itens com os valores definidos no cadastro de venda. itens.Produtos deve ser definido nos moldes de um JSON, pois será usada assim.
+        itens.Produtos.push({
+            "CodigoProduto": CodigoProduto.value,
+            "Quantidade": Qtde,
+            "ValorUnitario": ValorUnitario,
+            "ValorTotal": SubTotal
+        });
+
+        //Define o valor a ser exibido na TextArea. Esse valor será o JSON gerado a partir da var itens.Produtos
+        document.getElementById("txtJsonProdutos").value = JSON.stringify(itens.Produtos);
+        var linhaGrid = `<tr id=${CodigoProduto.value}>
+                         <td> ${CodigoProduto.options[CodigoProduto.selectedIndex].text}</td>
+                         <td> ${ValorUnitario}</td>
+                         <td>${Qtde}</td>
+                         <td>R$ ${SubTotal}</td>
+                         </tr>`;
+   
+
+        gridProdutos.innerHTML += linhaGrid;
+        var total = Number(document.getElementById("txtTotal").value) + Number(SubTotal);
+        //var total = Number(document.getElementById("txtTotal").value.ToString().replace(",", ".")) + Number(SubTotal);
+        console.log(total);
+        document.getElementById("txtTotal").value = DuasCasasDecimais(total).replace(".",",");
+
+        document.getElementById("txtQtde").value = "";
+        document.getElementById("txtSubTotal").value = "";
+        document.getElementById("txtPrecoUnitario").value = "";
+        document.getElementById("cboProduto").selectedIndex = -1;
+    }
+
+    function DuasCasasDecimais(num) {
+        return parseFloat(Math.round(num * 100) / 100).toFixed(2);
+    }
+</script>

@@ -1,0 +1,60 @@
+﻿@model SistemaVenda.Models.ProdutoViewModel;
+@{
+    var disabled = (Model.Codigo == null) ? "disabled" : string.Empty;
+    ViewData["Title"] = "Produto";
+}
+<h2>Produtos</h2>
+<hr />
+
+<form asp-controller="Produto" asp-action="Cadastro" method="post">
+    <input type="hidden" asp-for="Codigo" value="@Model.Codigo" />
+    <div class="form-group">
+        <div class="row" style="text-align: center;">
+
+            <div class="col-6">
+                <label>Descrição</label>
+                <input type="text" asp-for="Descricao" value="@Model.Descricao" class="form-control" />
+                <span asp-validation-for="Descricao" class="text-danger"></span>
+            </div>
+            <div class="col-6">
+                <label>Quantidade</label>
+                <input type="number" asp-for="Quantidade" value="@Model.Quantidade" class="form-control" />
+                <span asp-validation-for="Quantidade" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="row" style="text-align: center;">
+            <div class="col-6">
+                <label>Valor</label>
+                <input type="text" asp-for="Valor" value="@Model.Valor" class="form-control" />
+                <span asp-validation-for="Valor" class="text-danger"></span>
+            </div>
+            <div class="col-6">
+                <label>Categoria</label>
+                <select asp-for="CodigoCategoria" class="form-control input-group-lg" asp-items="@Model.ListaCategorias"></select>
+                <span asp-validation-for="CodigoCategoria" class="text-danger"></span>
+            </div>
+        </div>
+        <br />
+        <div class="col">
+            <button type="button" class="btn btn-info" onclick="Novo()">Novo</button>
+            <button type="submit" class="btn btn-success">Gravar</button>
+            <button type="button" class="btn btn-warning" onclick="Listagem()">Listagem</button>
+            <button type="button" class="btn btn-danger" onclick="Excluir(@Model.Codigo)" @disabled>Excluir</button>
+        </div>
+    </div>
+</form>
+
+<script>
+    function Novo() {
+        Request("Cadastro")
+    }
+    function Listagem() {
+        Request('')
+    }
+    function Excluir(codigo) {
+        Request("Excluir\\" + codigo)
+    }
+    function Request(request) {
+        window.location = window.origin + "\\Produto\\" + request
+    }
+</script>

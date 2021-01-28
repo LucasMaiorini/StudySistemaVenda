@@ -1,0 +1,60 @@
+﻿@model SistemaVenda.Models.ClienteViewModel;
+@{
+    var disabled = (Model.Codigo == null) ? "disabled" : string.Empty;
+    ViewData["Title"] = "Cliente";
+}
+<h2>Clientes</h2>
+<hr />
+
+<form asp-controller="Cliente" asp-action="Cadastro" method="post">
+    <input type="hidden" asp-for="Codigo" value="@Model.Codigo" />
+    <div class="form-group">
+        <div class="row" style="text-align: center;">
+
+            <div class="col-6">
+                <label>Nome</label>
+                <input type="text" asp-for="Nome" value="@Model.Nome" class="form-control" />
+                <span asp-validation-for="Nome" class="text-danger"></span>
+            </div>
+            <div class="col-6">
+                <label>CNPJ ou CPF</label>
+                <input type="text" asp-for="CNPJ_CPF" value="@Model.CNPJ_CPF" class="form-control" />
+                <span asp-validation-for="CNPJ_CPF" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="row" style="text-align: center;">
+            <div class="col-6">
+                <label>E-mail</label>
+                <input type="email" asp-for="Email" value="@Model.Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="col-6">
+                <label>Celular</label>
+                <input type="tel" asp-for="Celular" value="@Model.Celular" class="form-control" />
+                <span asp-validation-for="Celular" class="text-danger"></span>
+            </div>
+        </div>
+        <br />
+        <div class="col">
+            <button type="button" class="btn btn-info" onclick="Novo()">Novo</button>
+            <button type="submit" class="btn btn-success">Gravar</button>
+            <button type="button" class="btn btn-warning" onclick="Listagem()">Listagem</button>
+            <button type="button" class="btn btn-danger" onclick="Excluir(@Model.Codigo)" @disabled>Excluir</button>
+        </div>
+    </div>
+</form>
+
+<script>
+    function Novo() {
+        Request("Cadastro")
+    }
+    function Listagem() {
+        Request()
+    }
+    function Excluir(codigo) {
+        Request("Excluir\\" + codigo)
+    }
+    function Request(request) {
+        window.location = window.origin + "\\Cliente\\" + request
+    }
+</script>
