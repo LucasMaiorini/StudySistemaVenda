@@ -1,11 +1,15 @@
+using Aplicacao.Servico;
+using Aplicacao.Servico.Interfaces;
+using Dominio.Interfaces;
+using Dominio.Repositorio;
+using Dominio.Servicos;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using SistemaVenda.DAL;
+using Repositorio.Entidades;
 
 namespace SistemaVenda
 {
@@ -21,13 +25,38 @@ namespace SistemaVenda
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ApplicationDbContext>(options =>
+            //Definitiva
+            services.AddDbContext<Repositorio.Contexto.ApplicationDbContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("MyStock")));
 
             //Nedded to work with session
             services.AddHttpContextAccessor();
             services.AddSession();
             services.AddControllersWithViews();
+
+            //Serviço Aplicação
+            services.AddScoped<IServicoAplicacaoCategoria, ServicoAplicacaoCategoria>();
+            services.AddScoped<IServicoAplicacaoCliente, ServicoAplicacaoCliente>();
+            services.AddScoped<IServicoAplicacaoProduto, ServicoAplicacaoProduto>();
+            services.AddScoped<IServicoAplicacaoVenda, ServicoAplicacaoVenda>();
+            services.AddScoped<IServicoAplicacaoUsuario, ServicoAplicacaoUsuario>();
+
+
+            //Domínio
+            services.AddScoped<IServicoCategoria, ServicoCategoria>();
+            services.AddScoped<IServicoCliente, ServicoCliente>();
+            services.AddScoped<IServicoProduto, ServicoProduto>();
+            services.AddScoped<IServicoVenda, ServicoVenda>();
+            services.AddScoped<IServicoUsuario, ServicoUsuario>();
+
+            //Repositorio
+            services.AddScoped<IRepositorioCategoria, RepositorioCategoria>();
+            services.AddScoped<IRepositorioCliente, RepositorioCliente>();
+            services.AddScoped<IRepositorioProduto, RepositorioProduto>();
+            services.AddScoped<IRepositorioVenda, RepositorioVenda>();
+            services.AddScoped<IRepositorioVendaProdutos, RepositorioVendaProdutos>();
+            services.AddScoped<IRepositorioUsuario, RepositorioUsuario>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

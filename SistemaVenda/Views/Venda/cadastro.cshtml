@@ -2,6 +2,12 @@
 @{
     var disabled = (Model.Codigo == null) ? "disabled" : string.Empty;
     ViewData["Title"] = "Venda";
+    var varData = "";
+    if (Model.Data.HasValue)
+    {
+        varData = @Model.Data.Value.ToString("yyyy-MM-dd");
+    } 
+
 }
 <h2>Vendas</h2>
 <hr />
@@ -9,20 +15,25 @@
 <form asp-controller="Venda" asp-action="Cadastro" method="post">
     <input type="hidden" asp-for="Codigo" value="@Model.Codigo" />
     <div class="form-group">
+
         <div class="row" style="text-align: center;">
 
             <div class="col-6">
                 <label>Data</label>
-                <input type="date" asp-for="Data" value="@Model.Data" class="form-control" />
+                <input type="date" asp-for="Data" value="@varData" class="form-control" />
                 <span asp-validation-for="Data" class="text-danger"></span>
             </div>
+
             <div class="col-6">
                 <label>Cliente</label>
                 <select asp-for="CodigoCliente" asp-items="@Model.ListaClientes" class="form-control"></select>
                 <span asp-validation-for="CodigoCliente" class="text-danger"></span>
             </div>
+
         </div>
+
         <div class="row" style="text-align: center;">
+
             <div class="col-4">
                 <label>Produtos</label>
                 <select id="cboProduto" onchange="BuscarPrecoProduto(); CalcularSubTotal()" asp-items="@Model.ListaProdutos" class="form-control"></select>
@@ -32,6 +43,7 @@
                 <label>Preço</label>
                 <input id="txtPrecoUnitario" type="number" class="form-control" disabled />
             </div>
+
             <div class="col-2">
                 <label>Quantidade</label>
                 <input id="txtQtde" type="number" class="form-control" onchange="CalcularSubTotal()" />
@@ -60,6 +72,16 @@
                         </tr>
                     </thead>
                     <tbody id="gridProdutos">
+
+                        @*@foreach (var item in @Model)
+                        {
+                            <tr id="linhaTabela" onclick="Editar(@item.Codigo)" style="cursor:pointer;">
+                                <td> @item.Codigo</td>
+                                <td>@item.Data</td>
+                                <td>@item.CodigoCliente </td>
+                                <td>@item.Total</td>
+                            </tr>
+                        }*@
                     </tbody>
                 </table>
             </div>
@@ -86,7 +108,6 @@
 </form>
 
 <script>
-
 
     function Novo() {
         Request("Cadastro")
@@ -153,13 +174,13 @@
                          <td>${Qtde}</td>
                          <td>R$ ${SubTotal}</td>
                          </tr>`;
-   
+
 
         gridProdutos.innerHTML += linhaGrid;
-        var total = Number(document.getElementById("txtTotal").value) + Number(SubTotal);
+        var total = Number(document.getElementById("txtTotal").value.replace(",", ".")) + Number(SubTotal);
         //var total = Number(document.getElementById("txtTotal").value.ToString().replace(",", ".")) + Number(SubTotal);
         console.log(total);
-        document.getElementById("txtTotal").value = DuasCasasDecimais(total).replace(".",",");
+        document.getElementById("txtTotal").value = DuasCasasDecimais(total).replace(".", ",");
 
         document.getElementById("txtQtde").value = "";
         document.getElementById("txtSubTotal").value = "";

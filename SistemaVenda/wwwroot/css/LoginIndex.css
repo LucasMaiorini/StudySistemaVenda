@@ -36,9 +36,15 @@ h2 {
     align-items: center;
     flex-direction: column;
     justify-content: center;
-    width: 100%;
-    min-height: 100%;
+    min-height: 70%;
     padding: 20px;
+}
+
+.wrapperTip {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    
 }
 
 #formContent {
@@ -48,9 +54,10 @@ h2 {
     padding: 30px 0 0 0;
     width: 90%;
     max-width: 450px;
+    min-width: 300px;
     position: relative;
-    -webkit-box-shadow: 0 30px 60px 0 rgba(0,0,0,0.3);
-    box-shadow: 0 30px 60px 0 rgba(0,0,0,0.3);
+    -webkit-box-shadow: 0 30px 60px 0 rgb(0 0 0 / 30%);
+    box-shadow: 0 30px 60px 0 rgb(0 0 0 / 30%);
     text-align: center;
 }
 
@@ -64,17 +71,10 @@ h2 {
     border-radius: 0 0 10px 10px;
 }
 
-.modal-content {
-    text-align: center;
-}
-
-.modal-header {
-    align-items: end;
-    padding: 1rem 9rem;
-}
 
 .close {
     font-size: 2.5rem;
+    color: red;
 }
 /* TABS */
 h2.inactive {
@@ -322,4 +322,267 @@ span {
     width: auto;
     min-height: 40px;
     margin-bottom: 12px;
+}
+/*CLOSE*/
+
+.close-container {
+    position: absolute;
+    right: 0px;
+    margin-top: -30px;
+    cursor: pointer;
+    width: 50;
+    height: 50px;
+}
+
+.leftright {
+    height: 4px;
+    width: 35px;
+    position: absolute;
+    margin-top: 24px;
+    background-color: #F4A259;
+    border-radius: 2px;
+    transform: rotate( 45deg );
+    transition: all .3s ease-in;
+}
+
+.rightleft {
+    height: 4px;
+    width: 35px;
+    position: absolute;
+    margin-top: 24px;
+    background-color: #F4A259;
+    border-radius: 2px;
+    transform: rotate( -45deg );
+    transition: all .3s ease-in;
+}
+
+label {
+    color: white;
+    font-family: Helvetica, Arial, sans-serif;
+    font-size: .6em;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    transition: all .3s ease-in;
+    opacity: 0;
+}
+
+.close {
+    margin: 60px 0 0 5px;
+    position: absolute;
+}
+
+.close-container:hover .leftright {
+    transform: rotate(-45deg);
+    background-color: #F25C66;
+}
+
+.close-container:hover .rightleft {
+    transform: rotate(45deg);
+    background-color: #F25C66;
+}
+
+.close-container:hover label {
+    opacity: 1;
+}
+
+.rounded {
+    width: 45px;
+    height: 45px;
+    background-color: white;
+    border-radius: 30px;
+    contain: content;
+    box-shadow: 0 5px 5px 0px #3b90be;
+    transition-duration: 0.2s;
+    margin-top: 30%;
+    margin-bottom: 30%;
+    display: flex;
+}
+
+    .rounded img {
+        max-width: 80%;
+        max-height: 100%;
+        display: block;
+        margin: auto;
+    }
+
+    .rounded:hover {
+        box-shadow: 0 0px 2px 2px #3b90be;
+        transition-duration: 0.3s;
+        margin-bottom: 35%;
+        margin-top: 35%;
+        border-radius: 0;
+    }
+
+
+.iconContainer {
+    position: absolute;
+    text-align: -webkit-center;
+    top: 5%;
+    left: 1%;
+    display: inline-block;
+    box-shadow: 0px 4px 7px 1px #418db6;
+    padding: 1%;
+    border-radius: 6%;
+    z-index: 2;
+}
+
+
+.tip {
+    border: solid;
+    border-color: white;
+    padding: 0 10vh 0 10vh;
+    color: white;
+    width: 180px;
+/*    top: -25px;
+    position: relative;*/
+}
+
+
+/*Novo modal*/
+.modal-overlay {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    background-color: #000;
+    visibility: hidden;
+    backface-visibility: hidden;
+    transition: opacity 0.6s cubic-bezier(.55,0,.1,1), visibility 0.6s cubic-bezier(.55,0,.1,1);
+    opacity: 0.8;
+}
+
+.modal {
+    visibility: hidden;
+    opacity: 1;
+    z-index: 5;
+    word-break: break-word;
+    text-align: center;
+    transition: 1s;
+    width: 400px;
+}
+
+.active {
+    visibility: visible;
+    transform: scale(1);
+}
+
+.modalText {
+    margin: -150px 60px 2% 60px;
+    transition: 1s;
+}
+
+#modalStackParagraph {
+    margin-top: -210;
+}
+
+#modalInfoParagraph {
+    margin: -190px 60px 2% 80px;
+}
+
+.aModal {
+    margin: 3%;
+    transition: 1s;
+}
+
+.imgModal {
+    width: 60px;
+    transition: 1s;
+}
+
+.close-modal {
+    position: absolute;
+    cursor: pointer;
+    backface-visibility: hidden;
+    transition: opacity 0.6s cubic-bezier(.55,0,.1,1), transform 0.6s cubic-bezier(.55,0,.1,1);
+    transition-delay: 3s;
+    transform: translateY(10px);
+    opacity: 1;
+    width: 25px;
+    right: 30px;
+    top: -5px;
+}
+
+    .close-modal:hover {
+        transform: rotate( 90deg );
+    }
+
+@media only screen and (min-width: 801px) {
+    .modal {
+        top: 5%;
+        position: fixed;
+        left: 8%;
+    }
+}
+
+
+@media only screen and ( max-width: 800px) {
+
+    .modal {
+        top: 5%;
+        position: fixed;
+        left: 15%;
+    }
+
+    .close-modal {
+        right: 30px !important;
+    }
+}
+
+@media only screen and (max-width: 450px) {
+
+    .modal {
+        top: 150px;
+        transform: rotate( 90deg );
+        margin-left: -70px;
+    }
+
+    .close-modal {
+        left: 55px;
+        top: 0px;
+    }
+
+    .rounded {
+        margin: 1vh 2vw 1vh 2vw;
+    }
+
+        .rounded:hover {
+            margin: 1vh 3vw 1vh 3vw;
+        }
+
+    .iconContainer {
+        display: flex;
+        top: 0%;
+        left: 25%;
+        width: 50%;
+        min-width: 150px;
+    }
+
+    .aModal {
+        transform: rotate( -90deg );
+        position: relative;
+        top: -55px;
+        left: 50px;
+    }
+
+    .modalText {
+        transform: rotate( -90deg );
+        margin: -145px 180px 0% 60px;
+    }
+
+    #modalStackParagraph {
+        margin: -205px 0 0 0;
+    }
+
+    #modalInfoParagraph {
+        margin: -213px 94px 4px 85px;
+    }
+
+    .tip {
+        padding: 0 10vw 0 10vw;
+    }
 }

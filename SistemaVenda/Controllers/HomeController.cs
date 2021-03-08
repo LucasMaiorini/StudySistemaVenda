@@ -12,21 +12,9 @@ namespace SistemaVenda.Controllers
 {
     public class HomeController : Controller
     {
-        protected ApplicationDbContext Repositorio;
-        private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ApplicationDbContext repositorio, ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger)
         {
-            this.Repositorio = repositorio;
-            this._logger = logger;
         }
-
-
-
-        //public HomeController(ILogger<HomeController> logger)
-        //{
-        //    _logger = logger;
-        //}
 
         public IActionResult Index()
         {

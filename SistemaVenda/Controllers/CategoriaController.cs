@@ -1,40 +1,30 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using SistemaVenda.DAL;
-using SistemaVenda.Entidades;
+﻿using Aplicacao.Servico.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 using SistemaVenda.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace SistemaVenda.Controllers
 {
     public class CategoriaController : Controller
     {
-        protected ApplicationDbContext mContext;
+        readonly IServicoAplicacaoCategoria ServicoAplicacaoCategoria;
 
-        public CategoriaController(ApplicationDbContext context)
+        public CategoriaController(IServicoAplicacaoCategoria servicoAplicacaoCategoria)
         {
-            this.mContext = context;
+            ServicoAplicacaoCategoria = servicoAplicacaoCategoria;
         }
 
         public IActionResult Index()
         {
-            IEnumerable<Categoria> listaCategoria = mContext.Categoria.ToList();
-            mContext.Dispose();
-            return View(listaCategoria);
+            return View(ServicoAplicacaoCategoria.Buscar());
         }
 
         [HttpGet]
         public IActionResult Cadastro(int? id)
         {
-            CategoriaViewModel viewModel = new CategoriaViewModel();
+            var viewModel = new CategoriaViewModel();
             if (id != null)
             {
-                var entidade = mContext.Categoria.Where(x => x.Codigo == id).FirstOrDefault();
-                viewModel.Codigo = entidade.Codigo;
-                viewModel.Descricao = entidade.Descricao;
+                viewModel = ServicoAplicacaoCategoria.Buscar((int)id);
             }
             return View(viewModel);
         }
@@ -45,35 +35,19 @@ namespace SistemaVenda.Controllers
             //Valida a ViewModel
             if (ModelState.IsValid)
             {
-                var obj = new Categoria()
-                {
-                    Codigo = entidade.Codigo,
-                    Descricao = entidade.Descricao
-                };
-                if (entidade.Codigo == null)
-                {
-                    mContext.Categoria.Add(obj);
-                }
-                else
-                {
-                    mContext.Entry(obj).State = EntityState.Modified;
-                }
-                mContext.SaveChanges();
-                return RedirectToAction("Index");
+                ServicoAplicacaoCategoria.Criar(entidade);
             }
             else
             {
                 return View(entidade);
             }
-
+            return RedirectToAction("Index");
         }
 
         [HttpGet]
         public IActionResult Excluir(int id)
         {
-            var entidade = mContext.Categoria.Where(ent => ent.Codigo == id).FirstOrDefault();
-            mContext.Categoria.Remove(entidade);  
-            mContext.SaveChanges();
+            ServicoAplicacaoCategoria.Deletar(id);
             return RedirectToAction("Index");
         }
     }

@@ -1,13 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using SistemaVenda.Entidades;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using SistemaVenda.Dominio.Entidades;
 
-namespace SistemaVenda.DAL
+namespace Repositorio.Contexto
 {
-    public class ApplicationDbContext : DbContext, IApplicationDbContext
+    public class ApplicationDbContext : DbContext
     {
         //Constructor defined to accept the configuration setted in Startup.cs
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
@@ -22,9 +18,9 @@ namespace SistemaVenda.DAL
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-            builder.Entity<VendaProdutos>().HasKey(vp => new { vp.CodigoProduto, vp.CodigoVenda });
-            builder.Entity<VendaProdutos>().HasOne(vp => vp.Venda).WithMany(vp => vp.Produtos).HasForeignKey(vp => vp.CodigoVenda);
-            builder.Entity<VendaProdutos>().HasOne(vp => vp.Produto).WithMany(vp => vp.Vendas).HasForeignKey(vp => vp.CodigoProduto);
+            builder.Entity<VendaProdutos>().HasKey(x => new { x.CodigoProduto, x.CodigoVenda });
+            builder.Entity<VendaProdutos>().HasOne(x => x.Venda).WithMany(y => y.Produtos).HasForeignKey(x => x.CodigoVenda);
+            builder.Entity<VendaProdutos>().HasOne(x => x.Produto).WithMany(y => y.Vendas).HasForeignKey(x => x.CodigoProduto);
         }
     }
 }

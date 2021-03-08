@@ -1,31 +1,25 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Aplicacao.Servico.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 using SistemaVenda.DAL;
 using SistemaVenda.Models;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace SistemaVenda.Controllers
 {
     public class RelatorioController : Controller
     {
-        public ApplicationDbContext mContext { get; set; }
+        readonly IServicoAplicacaoVenda ServicoAplicacaoVenda;
 
-        public RelatorioController(ApplicationDbContext context)
+        public RelatorioController(IServicoAplicacaoVenda ServicoAplicacaoVenda)
         {
-            mContext = context;
+            this.ServicoAplicacaoVenda = ServicoAplicacaoVenda;
         }
+
 
         public IActionResult Grafico()
         {
-            var lista = (from x in mContext.VendaProdutos
-                         group x by new { x.CodigoProduto, x.Produto.Descricao } into g
-                         select new GraficoViewModel {
-                         CodigoProduto = g.Key.CodigoProduto,
-                         Descricao = g.Key.Descricao,
-                         TotalVendido = g.Sum(x => x.Quantidade)}).ToList();
-            
+            var lista = this.ServicoAplicacaoVenda.ListaGrafico().ToList();
 
             string valores = string.Empty;
             string labels = string.Empty;
@@ -34,10 +28,10 @@ namespace SistemaVenda.Controllers
             var random = new Random();
 
             foreach (var item in lista)
-            {                
+            {
                 valores += item.TotalVendido.ToString() + ",";
                 labels += $"'{item.Descricao}',";
-                cores +=$"'{String.Format("#{0:X6}", random.Next(0x1000000))}',";
+                cores += $"'{String.Format("#{0:X6}", random.Next(0x1000000))}',";
             }
 
             ViewBag.Valores = valores;

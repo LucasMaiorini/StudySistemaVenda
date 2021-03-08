@@ -1,29 +1,46 @@
 ﻿@{
     ViewData["Title"] = "Sistema Vendas";
 }
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
 <div class="row" style="text-align: center;">
     <div class="col-md-2">
-        <div>
+        <div class="col-12">
             <a href="../Cliente/Index">
                 <img src="~/img/clientes.png" width="70" height="70" />
             </a>
         </div>
-    </div>
+        <div class="col-12">
+            <p style="border: solid; border-color: darkorange; margin: 10px; min-width: 80px;">
+                Clientes
+            </p>
 
-    <div class="col-md-2">
-        <div>
-            <a href="../Categoria/Index">
-                <img src="~/img/categorias.png" width="70" height="70" />
-            </a>
         </div>
     </div>
 
     <div class="col-md-2">
         <div>
-            <a href="../Produto/Index">
-                <img src="~/img/produtos.png" width="70" height="70" />
+            <a href="../Categoria/Index" data-toggle="tooltip" title="I'm a tooltip" data-placement="top">
+                <img src="~/img/categorias.png" width="70" height="70" />
             </a>
+        </div>
+        <div class="col-12">
+            <p style="border: solid; border-color: goldenrod; margin: 10px; min-width: 80px;">
+                Categorias
+            </p>
+        </div>
+    </div>
+
+    <div class="col-md-2">
+        <div>
+            <a href="../Produto/Index" data-toggle="tooltip" title="Produto">
+                <img src="~/img/produtos.png" width="70" height="70" data-toggle="tooltip" title="I'm a tooltip" data-placement="top" />
+            </a>
+        </div>
+        <div class="col-12">
+            <p style="border: solid; border-color: darkseagreen; margin: 10px; min-width: 80px;">
+                Produtos
+            </p>
         </div>
     </div>
 
@@ -34,6 +51,11 @@
                 <img src="~/img/vendas.png" width="70" height="70" />
             </a>
         </div>
+        <div class="col-12">
+            <p style="border: solid; border-color: blueviolet; margin: 10px; min-width: 80px;">
+                Vendas
+            </p>
+        </div>
     </div>
 
     <div class="col-md-2">
@@ -42,14 +64,18 @@
                 <img src="~/img/relatorios.png" width="70" height="70" />
             </a>
         </div>
-    </div>
+        <div class="col-12">
+            <p style="border: solid; border-color: darkturquoise; margin: 10px; min-width: 80px;">
+                Relatório
+            </p>
 
-    <div class="col-md-2">
-        <div>
-            <a href="../Configuracao/Index">
-                <img src="~/img/configuracoes.png" width="70" height="70" />
-            </a>
         </div>
     </div>
 
 </div>
+
+<script>
+    $(document).ready(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>

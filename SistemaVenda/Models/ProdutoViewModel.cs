@@ -26,5 +26,7 @@ namespace SistemaVenda.Models
 
         public IEnumerable<SelectListItem> ListaCategorias { get; set; }
 
+        public string DescricaoCategoria { get; set; }
+
     }
 }

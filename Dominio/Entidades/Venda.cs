@@ -1,16 +1,12 @@
-﻿using System;
+﻿using Dominio.Entidades;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace SistemaVenda.Entidades
+namespace SistemaVenda.Dominio.Entidades
 {
-    public class Venda
+    public class Venda : EntityBase
     {
-        [Key]
-        public int? Codigo { get; set; }
         public DateTime Data { get; set; }
         [ForeignKey("Cliente")]
         public int CodigoCliente { get; set; }
